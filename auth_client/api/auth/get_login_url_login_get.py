@@ -95,6 +95,7 @@ def sync_detailed(
     """Get Login Url
 
      Build an OIDC authorize URL (Standard or PKCE) using the shared auth client.
+
     If PKCE, a fresh verifier/challenge is generated and (optionally) persisted to cache keyed by
     `state`.
 
@@ -134,6 +135,7 @@ def sync(
     """Get Login Url
 
      Build an OIDC authorize URL (Standard or PKCE) using the shared auth client.
+
     If PKCE, a fresh verifier/challenge is generated and (optionally) persisted to cache keyed by
     `state`.
 
@@ -168,6 +170,7 @@ async def asyncio_detailed(
     """Get Login Url
 
      Build an OIDC authorize URL (Standard or PKCE) using the shared auth client.
+
     If PKCE, a fresh verifier/challenge is generated and (optionally) persisted to cache keyed by
     `state`.
 
@@ -205,6 +208,7 @@ async def asyncio(
     """Get Login Url
 
      Build an OIDC authorize URL (Standard or PKCE) using the shared auth client.
+
     If PKCE, a fresh verifier/challenge is generated and (optionally) persisted to cache keyed by
     `state`.
 

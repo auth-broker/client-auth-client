@@ -45,6 +45,7 @@ def sync_detailed(
     """Callback
 
      Exchange the authorization code for tokens using the full redirect URL.
+
     For PKCE, the verifier is auto-fetched from cache via `state` (or falls back to the verifier
     included in the /login response if the caller passes it back).
 
@@ -72,6 +73,7 @@ def sync(
     """Callback
 
      Exchange the authorization code for tokens using the full redirect URL.
+
     For PKCE, the verifier is auto-fetched from cache via `state` (or falls back to the verifier
     included in the /login response if the caller passes it back).
 
@@ -95,6 +97,7 @@ async def asyncio_detailed(
     """Callback
 
      Exchange the authorization code for tokens using the full redirect URL.
+
     For PKCE, the verifier is auto-fetched from cache via `state` (or falls back to the verifier
     included in the /login response if the caller passes it back).
 
@@ -120,6 +123,7 @@ async def asyncio(
     """Callback
 
      Exchange the authorization code for tokens using the full redirect URL.
+
     For PKCE, the verifier is auto-fetched from cache via `state` (or falls back to the verifier
     included in the /login response if the caller passes it back).
 
