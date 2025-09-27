@@ -1,5 +1,5 @@
 [project]
-name = "auth_client"
+name = "ab-client-auth-client"
 version = "0.1.0"
 description = "A client library for accessing FastAPI"
 authors = []
@@ -13,16 +13,16 @@ dependencies = [
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "auth_client",
+    "ab_client_auth_client",
     "CHANGELOG.md",
-    "auth_client/py.typed",
+    "ab_client_auth_client/py.typed",
 ]
 
 [tool.hatch.build.targets.wheel]
 include = [
-    "auth_client",
+    "ab_client_auth_client",
     "CHANGELOG.md",
-    "auth_client/py.typed",
+    "ab_client_auth_client/py.typed",
 ]
 
 [build-system]
