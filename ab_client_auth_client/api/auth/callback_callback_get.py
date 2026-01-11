@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.o_auth_2_token import OAuth2Token
+from ...models.o_auth_2_token_exposed import OAuth2TokenExposed
 from ...types import Response
 
 
@@ -18,9 +18,11 @@ def _get_kwargs() -> dict[str, Any]:
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[OAuth2Token]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[OAuth2TokenExposed]:
     if response.status_code == 200:
-        response_200 = OAuth2Token.from_dict(response.json())
+        response_200 = OAuth2TokenExposed.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -29,7 +31,9 @@ def _parse_response(*, client: Union[AuthenticatedClient, Client], response: htt
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[OAuth2Token]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[OAuth2TokenExposed]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -41,20 +45,15 @@ def _build_response(*, client: Union[AuthenticatedClient, Client], response: htt
 def sync_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[OAuth2Token]:
+) -> Response[OAuth2TokenExposed]:
     """Callback
-
-     Exchange the authorization code for tokens using the full redirect URL.
-
-    For PKCE, the verifier is auto-fetched from cache via `state` (or falls back to the verifier
-    included in the /login response if the caller passes it back).
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[OAuth2Token]
+        Response[OAuth2TokenExposed]
     """
 
     kwargs = _get_kwargs()
@@ -69,20 +68,15 @@ def sync_detailed(
 def sync(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[OAuth2Token]:
+) -> Optional[OAuth2TokenExposed]:
     """Callback
-
-     Exchange the authorization code for tokens using the full redirect URL.
-
-    For PKCE, the verifier is auto-fetched from cache via `state` (or falls back to the verifier
-    included in the /login response if the caller passes it back).
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        OAuth2Token
+        OAuth2TokenExposed
     """
 
     return sync_detailed(
@@ -93,20 +87,15 @@ def sync(
 async def asyncio_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[OAuth2Token]:
+) -> Response[OAuth2TokenExposed]:
     """Callback
-
-     Exchange the authorization code for tokens using the full redirect URL.
-
-    For PKCE, the verifier is auto-fetched from cache via `state` (or falls back to the verifier
-    included in the /login response if the caller passes it back).
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[OAuth2Token]
+        Response[OAuth2TokenExposed]
     """
 
     kwargs = _get_kwargs()
@@ -119,20 +108,15 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[OAuth2Token]:
+) -> Optional[OAuth2TokenExposed]:
     """Callback
-
-     Exchange the authorization code for tokens using the full redirect URL.
-
-    For PKCE, the verifier is auto-fetched from cache via `state` (or falls back to the verifier
-    included in the /login response if the caller passes it back).
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        OAuth2Token
+        OAuth2TokenExposed
     """
 
     return (

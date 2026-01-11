@@ -3,7 +3,7 @@ name = "ab-client-auth-client"
 version = "0.1.0"
 description = "A client library for accessing FastAPI"
 authors = []
-requires-python = "~=3.9"
+requires-python = ">=3.9,<4"
 readme = "README.md"
 dependencies = [
     "httpx>=0.23.0,<0.29.0",
@@ -12,18 +12,14 @@ dependencies = [
 ]
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "ab_client_auth_client",
-    "CHANGELOG.md",
-    "ab_client_auth_client/py.typed",
-]
+include = ["ab_client_auth_client"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"CHANGELOG.md" = "CHANGELOG.md"
+"ab_client_auth_client/py.typed" = "ab_client_auth_client/py.typed"
 
 [tool.hatch.build.targets.wheel]
-include = [
-    "ab_client_auth_client",
-    "CHANGELOG.md",
-    "ab_client_auth_client/py.typed",
-]
+include = ["ab_client_auth_client"]
 
 [build-system]
 requires = ["hatchling"]
