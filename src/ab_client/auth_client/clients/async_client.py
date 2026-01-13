@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+import json
+from collections.abc import AsyncGenerator
 from typing import Any, Dict, Optional, Union
 
 import httpx
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 
 from ..exceptions import HTTPException
 from ..models import *
@@ -25,7 +29,7 @@ class AsyncClient(BaseModel):
         scope: Optional[str] = None,
         response_type: Optional[str] = None,
         identity_provider: Optional[Union[str, None]] = None,
-    ) -> Any:
+    ) -> Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse]:
         base_url = self.base_url
         path = f"/login"
 
@@ -57,9 +61,14 @@ class AsyncClient(BaseModel):
             )
 
         body = None if 200 == 204 else response.json()
-        return body
 
-    async def callback_callback_get(self) -> Any:
+        return (
+            Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse].model_validate(body)
+            if body is not None
+            else Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse]()
+        )
+
+    async def callback_callback_get(self) -> OAuth2TokenExposed:
         base_url = self.base_url
         path = f"/callback"
 
@@ -87,4 +96,5 @@ class AsyncClient(BaseModel):
             )
 
         body = None if 200 == 204 else response.json()
-        return body
+
+        return OAuth2TokenExposed.model_validate(body) if body is not None else OAuth2TokenExposed()
