@@ -1,124 +1,200 @@
-# ab-client-auth-client
-A client library for accessing FastAPI
+<div align="center">
+
+# Python Package Template
+
+The template repository for creating python packages, shared across auth-broker.
+
+![Python](https://img.shields.io/badge/Python-3.12-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![UV](https://img.shields.io/badge/UV-Fast-6E40C9?style=for-the-badge)
+![Hatchling](https://img.shields.io/badge/Hatchling-PEP517-6E40C9?style=for-the-badge)
+![Ruff](https://img.shields.io/badge/Ruff-Lint-000000?style=for-the-badge)
+![Pre-commit](https://img.shields.io/badge/Pre--commit-Hooks-000000?style=for-the-badge)
+![Pytest](https://img.shields.io/badge/Pytest-Unit%2BAsync-08979C?style=for-the-badge)
+![Coverage](https://img.shields.io/badge/Cov-Reports-08979C?style=for-the-badge)
+![GitHub Actions](https://img.shields.io/badge/Actions-CI%2FCD-F7B500?style=for-the-badge&logo=github-actions)
+![PyPI](https://img.shields.io/badge/PyPI-Publish-6E40C9?style=for-the-badge)
+![Makefile](https://img.shields.io/badge/Makefile-Scripts-F7B500?style=for-the-badge)
+
+🦜🕸️
+
+[![CI](https://github.com/auth-broker/client-template/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/auth-broker/client-template/actions/workflows/ci.yaml)
+
+</div>
+
+______________________________________________________________________
+
+## Template Checklist
+
+- [ ] Create module `src/ab_client/your_package_name` ->
+  `src/ab_client/your_package_name`
+- [ ] Update `pyproject.toml`: `[project]` section based on your package name
+  / versioning etc.
+- [ ] Update `README.md` references of `your-package-name` ->
+  `your-package-name`
+- [ ] Remove this section
+
+______________________________________________________________________
+
+## Table of Contents
+
+<!-- toc -->
+
+- [Introduction](#introduction)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Formatting and linting](#formatting-and-linting)
+- [CICD](#cicd)
+
+<!-- tocstop -->
+
+______________________________________________________________________
+
+## Introduction
+
+This template repository aims to create a reusable package template which
+streamlines the creation and publishing of isolated python packages in auth-broker.
+This is aligned with the engineering vision @ auth-broker for better modularisation and
+reusability of code.
+
+______________________________________________________________________
+
+## Quick Start
+
+Since this is just a package, and not a service, there is no real "run" action.
+But you can run the tests immediately.
+
+Here are a list of available commands via make.
+
+### Bare Metal (i.e. your machine)
+
+1. `make install` - install the required dependencies.
+1. `make test` - runs the tests.
+
+### Docker
+
+1. `make build-docker` - build the docker image.
+1. `make run-docker` - run the docker compose services.
+1. `make test-docker` - run the tests in docker.
+1. `make clean-docker` - remove all docker containers etc.
+
+______________________________________________________________________
+
+## Installation
+
+### For Dev work on the repo
+
+Install `uv`, (_if you haven't already_)
+https://docs.astral.sh/uv/getting-started/installation/#installation-methods
+
+```shell
+brew install uv
+```
+
+Initialise pre-commit (validates ruff on commit.)
+
+```shell
+uv run pre-commit install
+```
+
+Install dependencies (including dev dependencies)
+
+```shell
+uv sync
+```
+
+If you are adding a new dev dependency, please run:
+
+```shell
+uv add --dev {your-new-package}
+```
+
+### Namespaces
+
+Packages all share the same namespace `ab_client`. To import this package into
+your project:
+
+```python
+from ab_client.template import placeholder_func
+```
+
+We encourage you to make your package available to all of ab via this
+`ab_client` namespace. The goal is to streamline development, POCs and overall
+collaboration.
+
+______________________________________________________________________
 
 ## Usage
-First, create a client:
 
-```python
-from ab_client_auth_client import Client
+### Adding the dependency to your project
 
-client = Client(base_url="https://api.example.com")
+The library is available on PyPI. You can install it using the following
+command:
+
+**Using pip**:
+
+```shell
+pip install your-package-name
 ```
 
-If the endpoints you're going to hit require authentication, use `AuthenticatedClient` instead:
+**Using UV**
 
-```python
-from ab_client_auth_client import AuthenticatedClient
+Note: there is currently no nice way like poetry, hence we still needd to
+provide the full url. https://github.com/astral-sh/uv/issues/10140
 
-client = AuthenticatedClient(base_url="https://api.example.com", token="SuperSecretToken")
+Add the dependency
+
+```shell
+uv add your-package-name
 ```
 
-Now call your endpoint and use your models:
+**Using poetry**:
 
-```python
-from ab_client_auth_client.models import MyDataModel
-from ab_client_auth_client.api.my_tag import get_my_data_model
-from ab_client_auth_client.types import Response
+Then run the following command to install the package:
 
-with client as client:
-    my_data: MyDataModel = get_my_data_model.sync(client=client)
-    # or if you need more info (e.g. status_code)
-    response: Response[MyDataModel] = get_my_data_model.sync_detailed(client=client)
+```shell
+poetry add your-package-name
 ```
 
-Or do the same thing with an async version:
+### How tos
+
+**Example Usage**
 
 ```python
-from ab_client_auth_client.models import MyDataModel
-from ab_client_auth_client.api.my_tag import get_my_data_model
-from ab_client_auth_client.types import Response
+# Please update this based on your package!
 
-async with client as client:
-    my_data: MyDataModel = await get_my_data_model.asyncio(client=client)
-    response: Response[MyDataModel] = await get_my_data_model.asyncio_detailed(client=client)
+from ab_client.template import placeholder_func
+
+
+if __name__ == "__main__":
+    print("This is a placeholder: ", placeholdder_func())
 ```
 
-By default, when you're calling an HTTPS API it will attempt to verify that SSL is working correctly. Using certificate verification is highly recommended most of the time, but sometimes you may need to authenticate to a server (especially an internal server) using a custom certificate bundle.
+______________________________________________________________________
 
-```python
-client = AuthenticatedClient(
-    base_url="https://internal_api.example.com", 
-    token="SuperSecretToken",
-    verify_ssl="/path/to/certificate_bundle.pem",
-)
-```
+## Formatting and linting
 
-You can also disable certificate validation altogether, but beware that **this is a security risk**.
+We use Ruff as the formatter and linter. The pre-commit has hooks which runs
+checking and applies linting automatically. The CI validates the linting,
+ensuring main is always looking clean.
 
-```python
-client = AuthenticatedClient(
-    base_url="https://internal_api.example.com", 
-    token="SuperSecretToken", 
-    verify_ssl=False
-)
-```
+You can manually use these commands too:
 
-Things to know:
-1. Every path/method combo becomes a Python module with four functions:
-    1. `sync`: Blocking request that returns parsed data (if successful) or `None`
-    1. `sync_detailed`: Blocking request that always returns a `Request`, optionally with `parsed` set if the request was successful.
-    1. `asyncio`: Like `sync` but async instead of blocking
-    1. `asyncio_detailed`: Like `sync_detailed` but async instead of blocking
+1. `make lint` - check for linting issues.
+1. `make format` - fix linting issues.
 
-1. All path/query params, and bodies become method arguments.
-1. If your endpoint had any tags on it, the first tag will be used as a module name for the function (my_tag above)
-1. Any endpoint which did not have a tag will be in `ab_client_auth_client.api.default`
+______________________________________________________________________
 
-## Advanced customizations
+## CICD
 
-There are more settings on the generated `Client` class which let you control more runtime behavior, check out the docstring on that class for more info. You can also customize the underlying `httpx.Client` or `httpx.AsyncClient` (depending on your use-case):
+### Publishing to PyPI
 
-```python
-from ab_client_auth_client import Client
+We publish to PyPI using Github releases. Steps are as follows:
 
-def log_request(request):
-    print(f"Request event hook: {request.method} {request.url} - Waiting for response")
-
-def log_response(response):
-    request = response.request
-    print(f"Response event hook: {request.method} {request.url} - Status {response.status_code}")
-
-client = Client(
-    base_url="https://api.example.com",
-    httpx_args={"event_hooks": {"request": [log_request], "response": [log_response]}},
-)
-
-# Or get the underlying httpx client to modify directly with client.get_httpx_client() or client.get_async_httpx_client()
-```
-
-You can even set the httpx client directly, but beware that this will override any existing settings (e.g., base_url):
-
-```python
-import httpx
-from ab_client_auth_client import Client
-
-client = Client(
-    base_url="https://api.example.com",
-)
-# Note that base_url needs to be re-set, as would any shared cookies, headers, etc.
-client.set_httpx_client(httpx.Client(base_url="https://api.example.com", proxies="http://localhost:8030"))
-```
-
-## Building / publishing this package
-This project uses [Poetry](https://python-poetry.org/) to manage dependencies  and packaging.  Here are the basics:
-1. Update the metadata in pyproject.toml (e.g. authors, version)
-1. If you're using a private repository, configure it with Poetry
-    1. `poetry config repositories.<your-repository-name> <url-to-your-repository>`
-    1. `poetry config http-basic.<your-repository-name> <username> <password>`
-1. Publish the client with `poetry publish --build -r <your-repository-name>` or, if for public PyPI, just `poetry publish --build`
-
-If you want to install this client into another project without publishing it (e.g. for development) then:
-1. If that project **is using Poetry**, you can simply do `poetry add <path-to-this-client>` from that project
-1. If that project is not using Poetry:
-    1. Build a wheel with `poetry build -f wheel`
-    1. Install that wheel from the other project `pip install <path-to-wheel>`
+1. Manually update the version in `pyproject.toml` file using a PR and merge to
+   main. Use `uv version --bump {patch/minor/major}` to update the version.
+1. Create a new release in Github with the tag name as the version number. This
+   will trigger the `publish` workflow. In the Release window, type in the
+   version number and it will prompt to create a new tag.
+1. Verify the release in
+   [PyPI](https://pypi.org/project/your-package-name/)
