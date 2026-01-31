@@ -68,7 +68,10 @@ class SyncClient(BaseModel):
             else Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse]()
         )
 
-    def callback_callback_get(self) -> OAuth2TokenExposed:
+    def callback_callback_get(
+        self,
+        redirect_url: Optional[Union[str, None]] = None,
+    ) -> OAuth2TokenExposed:
         base_url = self.base_url
         path = f"/callback"
 
@@ -78,7 +81,9 @@ class SyncClient(BaseModel):
             "Authorization": f"Bearer { self.get_access_token() }",
         }
 
-        query_params: Dict[str, Any] = {}
+        query_params: Dict[str, Any] = {
+            "redirect_url": redirect_url,
+        }
         query_params = {k: v for (k, v) in query_params.items() if v is not None}
 
         with httpx.Client(base_url=base_url, verify=self.verify) as client:

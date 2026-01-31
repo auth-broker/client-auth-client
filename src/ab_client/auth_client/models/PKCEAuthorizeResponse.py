@@ -10,6 +10,8 @@ class PKCEAuthorizeResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
+    type: Optional[str] = Field(validation_alias="type", default=None)
+
     url: str = Field(validation_alias="url")
 
     state: str = Field(validation_alias="state")

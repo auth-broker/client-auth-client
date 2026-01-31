@@ -68,7 +68,10 @@ class AsyncClient(BaseModel):
             else Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse]()
         )
 
-    async def callback_callback_get(self) -> OAuth2TokenExposed:
+    async def callback_callback_get(
+        self,
+        redirect_url: Optional[Union[str, None]] = None,
+    ) -> OAuth2TokenExposed:
         base_url = self.base_url
         path = f"/callback"
 
@@ -78,7 +81,9 @@ class AsyncClient(BaseModel):
             "Authorization": f"Bearer { self.get_access_token() }",
         }
 
-        query_params: Dict[str, Any] = {}
+        query_params: Dict[str, Any] = {
+            "redirect_url": redirect_url,
+        }
         query_params = {k: v for (k, v) in query_params.items() if v is not None}
 
         async with httpx.AsyncClient(base_url=base_url, verify=self.verify) as client:
