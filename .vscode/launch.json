@@ -2,11 +2,21 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python Debugger: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "pytest",
       "type": "python",
       "request": "launch",
       "module": "pytest",
-      "args": ["-vv", "--no-cov"],
+      "args": [
+        "-vv",
+        "--no-cov"
+      ],
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -20,7 +30,11 @@
       "request": "launch",
       "module": "pytest",
       // run pytest on the directory that contains the file in the active editor
-      "args": ["-vv", "${fileDirname}", "--no-cov"],
+      "args": [
+        "-vv",
+        "${fileDirname}",
+        "--no-cov"
+      ],
       "justMyCode": false,
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -33,7 +47,11 @@
       "type": "python",
       "request": "launch",
       "module": "pytest",
-      "args": ["-vv", "${relativeFile}", "--no-cov"],
+      "args": [
+        "-vv",
+        "${relativeFile}",
+        "--no-cov"
+      ],
       "justMyCode": false,
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
@@ -46,7 +64,11 @@
       "type": "python",
       "request": "launch",
       "module": "pytest",
-      "args": ["-vv", "${relativeFile}::${input:testName}", "--no-cov"],
+      "args": [
+        "-vv",
+        "${relativeFile}::${input:testName}",
+        "--no-cov"
+      ],
       "justMyCode": false,
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",

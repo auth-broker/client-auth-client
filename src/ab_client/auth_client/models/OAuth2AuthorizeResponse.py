@@ -1,4 +1,5 @@
 from typing import *
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -10,7 +11,7 @@ class OAuth2AuthorizeResponse(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    type: Optional[str] = Field(validation_alias="type", default=None)
+    type: Literal["STANDARD"] = Field(validation_alias="type", default="STANDARD")
 
     url: str = Field(validation_alias="url")
 

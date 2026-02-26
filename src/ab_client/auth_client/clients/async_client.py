@@ -5,7 +5,7 @@ from collections.abc import AsyncGenerator
 from typing import Any, Dict, Optional, Union
 
 import httpx
-from pydantic import BaseModel
+from pydantic import BaseModel, TypeAdapter
 
 from ..exceptions import HTTPException
 from ..models import *
@@ -18,10 +18,10 @@ class AsyncClient(BaseModel):
     verify: Union[bool, str] = True
     access_token: Optional[str] = None
 
-    def get_access_token(self) -> Optional[str]:
+    async def get_access_token(self) -> Optional[str]:
         return self.access_token
 
-    def set_access_token(self, value: str) -> None:
+    async def set_access_token(self, value: str) -> None:
         self.access_token = value
 
     async def get_login_url_login_get(
@@ -29,14 +29,14 @@ class AsyncClient(BaseModel):
         scope: Optional[str] = None,
         response_type: Optional[str] = None,
         identity_provider: Optional[Union[str, None]] = None,
-    ) -> Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse]:
+    ) -> AuthorizeResponse:
         base_url = self.base_url
         path = f"/login"
 
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": f"Bearer { self.get_access_token() }",
+            "Authorization": f"Bearer { await self.get_access_token() }",
         }
 
         query_params: Dict[str, Any] = {
@@ -62,11 +62,7 @@ class AsyncClient(BaseModel):
 
         body = None if 200 == 204 else response.json()
 
-        return (
-            Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse].model_validate(body)
-            if body is not None
-            else Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse]()
-        )
+        return TypeAdapter(AuthorizeResponse).validate_python(body)
 
     async def callback_callback_get(
         self,
@@ -78,7 +74,7 @@ class AsyncClient(BaseModel):
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": f"Bearer { self.get_access_token() }",
+            "Authorization": f"Bearer { await self.get_access_token() }",
         }
 
         query_params: Dict[str, Any] = {
@@ -102,4 +98,4 @@ class AsyncClient(BaseModel):
 
         body = None if 200 == 204 else response.json()
 
-        return OAuth2TokenExposed.model_validate(body) if body is not None else OAuth2TokenExposed()
+        return TypeAdapter(OAuth2TokenExposed).validate_python(body)

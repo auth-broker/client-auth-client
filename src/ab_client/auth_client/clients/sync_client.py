@@ -5,7 +5,7 @@ from collections.abc import Generator
 from typing import Any, Dict, Optional, Union
 
 import httpx
-from pydantic import BaseModel
+from pydantic import BaseModel, TypeAdapter
 
 from ..exceptions import HTTPException
 from ..models import *
@@ -29,7 +29,7 @@ class SyncClient(BaseModel):
         scope: Optional[str] = None,
         response_type: Optional[str] = None,
         identity_provider: Optional[Union[str, None]] = None,
-    ) -> Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse]:
+    ) -> AuthorizeResponse:
         base_url = self.base_url
         path = f"/login"
 
@@ -62,11 +62,7 @@ class SyncClient(BaseModel):
 
         body = None if 200 == 204 else response.json()
 
-        return (
-            Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse].model_validate(body)
-            if body is not None
-            else Union[OAuth2AuthorizeResponse, PKCEAuthorizeResponse]()
-        )
+        return TypeAdapter(AuthorizeResponse).validate_python(body)
 
     def callback_callback_get(
         self,
@@ -102,4 +98,4 @@ class SyncClient(BaseModel):
 
         body = None if 200 == 204 else response.json()
 
-        return OAuth2TokenExposed.model_validate(body) if body is not None else OAuth2TokenExposed()
+        return TypeAdapter(OAuth2TokenExposed).validate_python(body)
