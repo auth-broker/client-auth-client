@@ -10,10 +10,10 @@ class LoginRequest(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    scope: Optional[str] = Field(validation_alias="scope", default=None)
+    scope: Optional[str] = Field(validation_alias="scope", default="openid email profile")
 
-    response_type: Optional[str] = Field(validation_alias="response_type", default=None)
+    response_type: Optional[str] = Field(validation_alias="response_type", default="code")
 
-    identity_provider: Optional[Union[str, None]] = Field(validation_alias="identity_provider", default=None)
+    identity_provider: Optional[Union[str, None]] = Field(validation_alias="identity_provider", default="Google")
 
     app_context: Optional[Dict[str, Any]] = Field(validation_alias="app_context", default=None)

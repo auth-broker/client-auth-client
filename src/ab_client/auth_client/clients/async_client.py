@@ -34,8 +34,11 @@ class AsyncClient(BaseModel):
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": f"Bearer { await self.get_access_token() }",
         }
+
+        _token = await self.get_access_token()
+        if _token:
+            headers["Authorization"] = f"Bearer {_token}"
 
         query_params: Dict[str, Any] = {}
         query_params = {k: v for (k, v) in query_params.items() if v is not None}
@@ -46,7 +49,7 @@ class AsyncClient(BaseModel):
                 httpx.URL(path),
                 headers=headers,
                 params=query_params,
-                json=data.dict(),
+                json=data.model_dump(by_alias=True, exclude_none=True),
             )
 
         if response.status_code != 200:
@@ -67,10 +70,12 @@ class AsyncClient(BaseModel):
         path = f"/callback"
 
         headers = {
-            "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": f"Bearer { await self.get_access_token() }",
         }
+
+        _token = await self.get_access_token()
+        if _token:
+            headers["Authorization"] = f"Bearer {_token}"
 
         query_params: Dict[str, Any] = {
             "redirect_url": redirect_url,
