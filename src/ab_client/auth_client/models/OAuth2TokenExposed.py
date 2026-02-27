@@ -16,3 +16,5 @@ class OAuth2TokenExposed(BaseModel):
     id_token: Optional[Union[str, None]] = Field(validation_alias="id_token", default=None)
 
     refresh_token: Optional[Union[str, None]] = Field(validation_alias="refresh_token", default=None)
+
+    app_context: Optional[Union[Dict[str, str], None]] = Field(validation_alias="app_context", default=None)

@@ -24,11 +24,9 @@ class SyncClient(BaseModel):
     def set_access_token(self, value: str) -> None:
         self.access_token = value
 
-    def get_login_url_login_get(
+    def get_login_url_login_post(
         self,
-        scope: Optional[str] = None,
-        response_type: Optional[str] = None,
-        identity_provider: Optional[Union[str, None]] = None,
+        data: LoginRequest,
     ) -> AuthorizeResponse:
         base_url = self.base_url
         path = f"/login"
@@ -39,25 +37,22 @@ class SyncClient(BaseModel):
             "Authorization": f"Bearer { self.get_access_token() }",
         }
 
-        query_params: Dict[str, Any] = {
-            "scope": scope,
-            "response_type": response_type,
-            "identity_provider": identity_provider,
-        }
+        query_params: Dict[str, Any] = {}
         query_params = {k: v for (k, v) in query_params.items() if v is not None}
 
         with httpx.Client(base_url=base_url, verify=self.verify) as client:
             response = client.request(
-                "get",
+                "post",
                 httpx.URL(path),
                 headers=headers,
                 params=query_params,
+                json=data.dict(),
             )
 
         if response.status_code != 200:
             raise HTTPException(
                 response.status_code,
-                f"get_login_url_login_get failed with status code: {response.status_code}",
+                f"get_login_url_login_post failed with status code: {response.status_code}",
             )
 
         body = None if 200 == 204 else response.json()
