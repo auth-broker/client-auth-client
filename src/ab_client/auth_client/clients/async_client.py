@@ -99,3 +99,41 @@ class AsyncClient(BaseModel):
         body = None if 200 == 204 else response.json()
 
         return TypeAdapter(OAuth2TokenExposed).validate_python(body)
+
+    async def refresh_token_refresh_post(
+        self,
+        data: RefreshTokenRequest,
+    ) -> OAuth2TokenExposed:
+        base_url = self.base_url
+        path = f"/refresh"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+
+        _token = await self.get_access_token()
+        if _token:
+            headers["Authorization"] = f"Bearer {_token}"
+
+        query_params: Dict[str, Any] = {}
+        query_params = {k: v for (k, v) in query_params.items() if v is not None}
+
+        async with httpx.AsyncClient(base_url=base_url, verify=self.verify) as client:
+            response = await client.request(
+                "post",
+                httpx.URL(path),
+                headers=headers,
+                params=query_params,
+                json=data.model_dump(by_alias=True, exclude_none=True),
+            )
+
+        if response.status_code != 200:
+            raise HTTPException(
+                response.status_code,
+                f"refresh_token_refresh_post failed with status code: {response.status_code}",
+            )
+
+        body = None if 200 == 204 else response.json()
+
+        return TypeAdapter(OAuth2TokenExposed).validate_python(body)
