@@ -10,7 +10,7 @@ class LoginRequest(BaseModel):
 
     model_config = {"populate_by_name": True, "validate_assignment": True}
 
-    scope: Optional[str] = Field(validation_alias="scope", default="openid email profile")
+    scope: Optional[str] = Field(validation_alias="scope", default="openid email profile offline_access")
 
     response_type: Optional[str] = Field(validation_alias="response_type", default="code")
 
